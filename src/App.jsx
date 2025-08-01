@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Landing from "./pages/Landing";
+import Home from "./pages/Home";
 import PoliceDashboard from "./pages/PoliceDashboard";
 import PublicPortal from "./pages/PublicPortal";
 import RecordDetails from "./pages/RecordDetails";
@@ -9,7 +9,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route path="/" element={<Home />} />
         <Route path="/police" element={<PoliceDashboard />} />
         <Route path="/public" element={<PublicPortal />} />
         <Route path="/record/:id" element={<RecordDetails />} />

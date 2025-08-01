@@ -1,52 +1,64 @@
-// src/pages/Home.jsx
-import { useEffect, useRef, useState } from 'react';
+import { motion } from "framer-motion";
+import { useEffect, useMemo } from "react";
 
-// Matrix background effect as a React component
 function MatrixBackground() {
   useEffect(() => {
     const canvas = document.getElementById('matrix-bg');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    let fontSize = 18;
-    let columns = Math.floor(width / fontSize);
-    let drops = Array(columns).fill(1);
-    const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const fontSize = 18;
+    let drops = [];
+    let animationId;
+
+    function setupCanvas() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      const columns = Math.floor(width / fontSize);
+      drops = Array(columns).fill(1);
+    }
+
+    const chars =
+      'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
     function draw() {
+      const width = canvas.width;
+      const height = canvas.height;
+
       ctx.fillStyle = 'rgba(10,20,30,0.18)';
       ctx.fillRect(0, 0, width, height);
-      ctx.font = fontSize + 'px monospace';
+      ctx.font = `${fontSize}px monospace`;
       ctx.shadowColor = '#00ff99';
       ctx.shadowBlur = 8;
       ctx.fillStyle = '#00fff7';
+
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
         if (drops[i] * fontSize > height && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
       }
+
       ctx.shadowBlur = 0;
+      setTimeout(() => {
+        animationId = requestAnimationFrame(draw);
+      }, 50); // slow speed
     }
-    let interval = setInterval(draw, 50);
-    function handleResize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      columns = Math.floor(width / fontSize);
-      drops = Array(columns).fill(1);
-    }
-    window.addEventListener('resize', handleResize);
+
+    setupCanvas();
+    draw();
+    window.addEventListener('resize', setupCanvas);
+
     return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', setupCanvas);
     };
   }, []);
+
   return (
     <canvas
       id="matrix-bg"
@@ -58,176 +70,163 @@ function MatrixBackground() {
         height: '100vh',
         zIndex: 0,
         pointerEvents: 'none',
-        opacity: 0.32,
-        filter: 'blur(0.5px)'
+        opacity: 0.5,
+        filter: 'blur(0.3px)',
       }}
     />
   );
 }
 
-// Scanlines overlay
-function Scanlines() {
-  return (
-    <div style={{
-      pointerEvents: 'none',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      zIndex: 2,
-      opacity: 0.10,
-      backgroundImage: 'repeating-linear-gradient(to bottom, transparent, transparent 2px, #00fff7 2.5px, transparent 3.5px)',
-      animation: 'scanlines-move 2s linear infinite',
-    }} />
+function Landing() {
+  const particles = useMemo(
+    () =>
+      [...Array(30)].map(() => ({
+        width: Math.random() * 40 + 20,
+        height: Math.random() * 40 + 20,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        opacity: 0.2 + Math.random() * 0.3,
+        y: Math.random() * 40 - 20,
+        x: Math.random() * 40 - 20,
+        duration: 6 + Math.random() * 4,
+        delay: Math.random() * 2,
+      })),
+    []
   );
-}
-
-// Particle overlay
-function Particles() {
-  const ref = useRef();
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    let particles = Array.from({ length: 60 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      r: Math.random() * 1.5 + 0.5,
-      dx: (Math.random() - 0.5) * 0.2,
-      dy: (Math.random() - 0.5) * 0.2,
-      color: Math.random() > 0.5 ? '#00fff7' : '#00ff99',
-    }));
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      for (const p of particles) {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, 2 * Math.PI);
-        ctx.fillStyle = p.color;
-        ctx.globalAlpha = 0.7;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 8;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-        p.x += p.dx;
-        p.y += p.dy;
-        if (p.x < 0 || p.x > width) p.dx *= -1;
-        if (p.y < 0 || p.y > height) p.dy *= -1;
-      }
-    }
-    let interval = setInterval(draw, 40);
-    function handleResize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-    }
-    window.addEventListener('resize', handleResize);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  return (
-    <canvas
-      ref={ref}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 1,
-        pointerEvents: 'none',
-        opacity: 0.18,
-      }}
-    />
-  );
-}
-
-const containerVariants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.18,
-    },
-  },
-};
-
-export default function Home() {
-  // Floating card parallax
-  const [cardStyle, setCardStyle] = useState({});
-  const cardRef = useRef();
-  useEffect(() => {
-    function handleMouseMove(e) {
-      const x = e.clientX / window.innerWidth - 0.5;
-      const y = e.clientY / window.innerHeight - 0.5;
-      setCardStyle({
-        transform: `perspective(1200px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.01)`
-      });
-    }
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   return (
-    <div className="relative min-h-screen w-screen flex items-center justify-center overflow-hidden bg-[#0a192f]">
+    <div className="fixed inset-0 min-h-screen w-screen overflow-hidden flex flex-col bg-black">
       <MatrixBackground />
-      <Particles />
-      <Scanlines />
-      <div
-        ref={cardRef}
-        className="relative z-10 bg-white/10 backdrop-blur-2xl rounded-3xl p-10 sm:p-14 max-w-2xl w-full text-center border border-cyan-900/30 shadow-lg ring-1 ring-cyan-900/10"
-        style={{ ...cardStyle, boxShadow: '0 4px 24px 0 #0ea5e944, 0 1.5px 8px 0 #0ea5e955' }}
+
+      {/* Floating Glowing Particles */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.3 }}
+        transition={{ duration: 1.5 }}
       >
-        <div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <h1
-            className="text-4xl sm:text-5xl font-extrabold mb-4 drop-shadow tracking-tight text-cyan-200"
-            style={{ textShadow: '0 1px 6px #0ea5e9aa' }}
-          >
-            Criminal Records dApp
-          </h1>
-          <p
-            className="text-gray-200 text-lg sm:text-xl mb-10 font-medium"
-            style={{ textShadow: '0 1px 2px #0ea5e955' }}
-          >
-            Transparent. Secure. Decentralized.<br />Powered by Blockchain.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <a
-              href="/police"
-              className="px-7 py-3 rounded-xl bg-blue-600 shadow text-white font-bold text-lg focus:outline-none focus:ring-2 focus:ring-blue-400/60 transition-all border border-blue-700/30 hover:bg-blue-700 hover:shadow-md hover:scale-105"
-              aria-label="Police Dashboard"
-              style={{ textShadow: '0 1px 2px #0ea5e9' }}
-            >
-              Police Dashboard
-            </a>
-            <a
-              href="/public"
-              className="px-7 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white font-bold text-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-400/40 transition-all hover:bg-gray-900 hover:border-blue-700 hover:shadow-md hover:scale-105"
-              aria-label="Public Portal"
-              style={{ textShadow: '0 1px 2px #0ea5e9' }}
-            >
-              Public Portal
-            </a>
-          </div>
+        {particles.map((p, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-blue-400 blur-2xl"
+            style={{
+              width: `${p.width}px`,
+              height: `${p.height}px`,
+              top: `${p.top}%`,
+              left: `${p.left}%`,
+              opacity: p.opacity,
+            }}
+            animate={{
+              y: [0, p.y, 0],
+              x: [0, p.x, 0],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: p.duration,
+              ease: "easeInOut",
+              delay: p.delay,
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Navbar */}
+      <motion.nav
+        className="relative z-20 flex justify-between items-center px-8 py-4"
+        initial={{ y: -40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7 }}
+      >
+        <div className="flex items-center space-x-2">
+          <span className="text-2xl font-bold text-white tracking-wide">
+            CR-DApp
+          </span>
         </div>
+        <div className="flex space-x-6">
+          <a
+            href="/"
+            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+          >
+            Home
+          </a>
+          <a
+            href="#about"
+            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+          >
+            About
+          </a>
+          <a
+            href="https://github.com/your-repo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+          >
+            GitHub
+          </a>
+        </div>
+      </motion.nav>
+
+      {/* Hero Section */}
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-4">
+        <motion.h1
+          className="text-4xl md:text-6xl font-extrabold mb-4 text-white drop-shadow-lg"
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          Criminal Records DApp
+        </motion.h1>
+        <motion.p
+          className="mb-8 text-lg md:text-2xl text-blue-200 max-w-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          A secure, transparent system for storing and accessing criminal records
+          using Web3.
+        </motion.p>
+        <motion.div
+          className="space-x-4"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1, duration: 0.6 }}
+        >
+          <a
+            href="/police"
+            className="px-6 py-3 bg-blue-600 text-white rounded shadow-lg hover:bg-blue-700 transition-all duration-300 font-semibold"
+          >
+            Police Dashboard
+          </a>
+          <a
+            href="/public"
+            className="px-6 py-3 bg-gray-700 text-white rounded shadow-lg hover:bg-gray-800 transition-all duration-300 font-semibold"
+          >
+            Public Portal
+          </a>
+        </motion.div>
       </div>
-      <style>{`
-        @keyframes scanlines-move {
-          0% { background-position-y: 0; }
-          100% { background-position-y: 8px; }
-        }
-      `}</style>
+
+      {/* Footer */}
+      <footer className="relative z-10 text-center text-blue-200 py-3 text-sm opacity-80">
+        &copy; {new Date().getFullYear()} Criminal Records DApp | Built for
+        Hackathons 🚀
+      </footer>
+
+      {/* About Section */}
+      <div
+        id="about"
+        className="relative z-10 text-center text-blue-100 py-8 px-4 max-w-2xl mx-auto"
+      >
+        <h2 className="text-2xl font-bold mb-2">About</h2>
+        <p>
+          This project leverages blockchain and decentralized storage to ensure
+          criminal records are tamper-proof, transparent, and accessible only to
+          authorized parties. Built with React, Tailwind CSS, and Framer Motion
+          for a modern and dynamic user experience.
+        </p>
+      </div>
     </div>
   );
 }
+
+export default Landing;
