@@ -4,10 +4,50 @@ import { Shield, Search, Plus, FileText, LogOut, Wallet, AlertTriangle, Clock, C
 
 // Mock data for criminal records
 const mockRecords = [
-  { id: '1', name: 'John Doe', crime: 'Theft', date: '2024-01-15', status: 'active', severity: 'medium', location: 'Downtown District', description: 'Shoplifting incident at local store', officerId: 'P001' },
-  { id: '2', name: 'Jane Smith', crime: 'Fraud', date: '2024-01-10', status: 'pending', severity: 'high', location: 'Business District', description: 'Identity theft and credit card fraud', officerId: 'D002' },
-  { id: '3', name: 'Mike Johnson', crime: 'Vandalism', date: '2024-01-08', status: 'resolved', severity: 'low', location: 'Residential Area', description: 'Graffiti on public property', officerId: 'P001' },
-  { id: '4', name: 'Sarah Wilson', crime: 'Assault', date: '2024-01-12', status: 'active', severity: 'high', location: 'Park Avenue', description: 'Physical altercation resulting in injury', officerId: 'D002' }
+  {
+    id: '1',
+    name: 'John Doe',
+    crime: 'Theft',
+    date: '2024-01-15',
+    status: 'active',
+    severity: 'medium',
+    location: 'Downtown District',
+    description: 'Shoplifting incident at local store',
+    officerId: 'P001'
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    crime: 'Fraud',
+    date: '2024-01-10',
+    status: 'pending',
+    severity: 'high',
+    location: 'Business District',
+    description: 'Identity theft and credit card fraud',
+    officerId: 'D002'
+  },
+  {
+    id: '3',
+    name: 'Mike Johnson',
+    crime: 'Vandalism',
+    date: '2024-01-08',
+    status: 'resolved',
+    severity: 'low',
+    location: 'Residential Area',
+    description: 'Graffiti on public property',
+    officerId: 'P001'
+  },
+  {
+    id: '4',
+    name: 'Sarah Wilson',
+    crime: 'Assault',
+    date: '2024-01-12',
+    status: 'active',
+    severity: 'high',
+    location: 'Park Avenue',
+    description: 'Physical altercation resulting in injury',
+    officerId: 'D002'
+  }
 ];
 
 // Authorized officers database
@@ -167,7 +207,7 @@ function Dashboard({ officer, onLogout }) {
     record.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getStatusColor = status => {
+  const getStatusColor = (status) => {
     switch (status) {
       case 'active': return 'text-red-400 bg-red-900/30 border-red-500/50';
       case 'pending': return 'text-yellow-400 bg-yellow-900/30 border-yellow-500/50';
@@ -176,7 +216,7 @@ function Dashboard({ officer, onLogout }) {
     }
   };
 
-  const getSeverityColor = severity => {
+  const getSeverityColor = (severity) => {
     switch (severity) {
       case 'high': return 'text-red-400';
       case 'medium': return 'text-yellow-400';
@@ -187,6 +227,8 @@ function Dashboard({ officer, onLogout }) {
 
   return (
     <div className="min-h-screen w-screen bg-black text-white">
+      <div className="w-full px-4 py-6">
+
       {/* Header */}
       <motion.header
         className="bg-black/60 backdrop-blur-lg border-b border-cyan-500/30"
@@ -194,7 +236,7 @@ function Dashboard({ officer, onLogout }) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <div className="flex justify-between items-center px-6 py-4">
+        <div className="flex justify-between items-center px-6 py-4 max-w-screen-xl mx-auto w-full">
           <div className="flex items-center space-x-4">
             <div className="p-2 bg-cyan-500/20 rounded-lg border border-cyan-500/50">
               <Shield className="w-8 h-8 text-cyan-400" />
@@ -206,7 +248,7 @@ function Dashboard({ officer, onLogout }) {
               </p>
             </div>
           </div>
-
+          
           <div className="flex items-center space-x-4">
             <div className="text-right text-sm">
               <p className="text-gray-400">Wallet Connected</p>
@@ -235,7 +277,9 @@ function Dashboard({ officer, onLogout }) {
         </div>
       </motion.header>
 
-      <div className="w-full px-4 py-6">
+      {/* Main Content Wrapper with centering and max width */}
+      <div className="p-6 max-w-screen-xl mx-auto w-full">
+
         {/* Dashboard Stats */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8"
@@ -244,10 +288,38 @@ function Dashboard({ officer, onLogout }) {
           transition={{ delay: 0.2, duration: 0.6 }}
         >
           {[
-            { label: 'Total Records', value: records.length, icon: FileText, color: 'cyan', bgColor: 'bg-cyan-500/10', borderColor: 'border-cyan-500/30' },
-            { label: 'Active Cases', value: records.filter(r => r.status === 'active').length, icon: AlertTriangle, color: 'red', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30' },
-            { label: 'Pending Review', value: records.filter(r => r.status === 'pending').length, icon: Clock, color: 'yellow', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
-            { label: 'Resolved', value: records.filter(r => r.status === 'resolved').length, icon: CheckCircle, color: 'green', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30' }
+            { 
+              label: 'Total Records', 
+              value: records.length, 
+              icon: FileText, 
+              color: 'cyan',
+              bgColor: 'bg-cyan-500/10',
+              borderColor: 'border-cyan-500/30'
+            },
+            { 
+              label: 'Active Cases', 
+              value: records.filter(r => r.status === 'active').length, 
+              icon: AlertTriangle, 
+              color: 'red',
+              bgColor: 'bg-red-500/10',
+              borderColor: 'border-red-500/30'
+            },
+            { 
+              label: 'Pending Review', 
+              value: records.filter(r => r.status === 'pending').length, 
+              icon: Clock, 
+              color: 'yellow',
+              bgColor: 'bg-yellow-500/10',
+              borderColor: 'border-yellow-500/30'
+            },
+            { 
+              label: 'Resolved', 
+              value: records.filter(r => r.status === 'resolved').length, 
+              icon: CheckCircle, 
+              color: 'green',
+              bgColor: 'bg-green-500/10',
+              borderColor: 'border-green-500/30'
+            }
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -277,7 +349,7 @@ function Dashboard({ officer, onLogout }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
         >
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-md w-full">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
@@ -294,7 +366,7 @@ function Dashboard({ officer, onLogout }) {
               aria-label="Search records by name, crime, or location"
             />
           </div>
-
+          
           <motion.button
             onClick={() => setShowAddRecord(true)}
             className="
@@ -433,7 +505,7 @@ function Dashboard({ officer, onLogout }) {
                 <span className="text-xl">×</span>
               </button>
             </div>
-
+            
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -450,7 +522,7 @@ function Dashboard({ officer, onLogout }) {
                     <p className="text-white font-semibold">{selectedRecord.date}</p>
                   </div>
                 </div>
-
+                
                 <div className="space-y-4">
                   <div>
                     <label className="text-gray-400 text-sm font-medium">Location</label>
@@ -470,14 +542,14 @@ function Dashboard({ officer, onLogout }) {
                   </div>
                 </div>
               </div>
-
+              
               <div>
                 <label className="text-gray-400 text-sm font-medium">Description</label>
                 <p className="text-white bg-gray-800/50 p-4 rounded-lg mt-2">
                   {selectedRecord.description}
                 </p>
               </div>
-
+              
               <div>
                 <label className="text-gray-400 text-sm font-medium">Assigned Officer</label>
                 <p className="text-cyan-300 font-medium">{selectedRecord.officerId}</p>
@@ -519,7 +591,7 @@ function Dashboard({ officer, onLogout }) {
                 <span className="text-xl">×</span>
               </button>
             </div>
-
+            
             <form className="space-y-4" onSubmit={e => e.preventDefault()}>
               <div>
                 <label className="block text-gray-400 text-sm font-medium mb-2" htmlFor="name-input">Name</label>
@@ -536,7 +608,7 @@ function Dashboard({ officer, onLogout }) {
                   placeholder="Enter full name"
                 />
               </div>
-
+              
               <div>
                 <label className="block text-gray-400 text-sm font-medium mb-2" htmlFor="crime-input">Crime</label>
                 <input
@@ -568,7 +640,7 @@ function Dashboard({ officer, onLogout }) {
                     <option value="resolved">Resolved</option>
                   </select>
                 </div>
-
+                
                 <div>
                   <label className="block text-gray-400 text-sm font-medium mb-2" htmlFor="severity-select">Severity</label>
                   <select id="severity-select" className="
@@ -633,7 +705,7 @@ function Dashboard({ officer, onLogout }) {
                 >
                   Add Record
                 </motion.button>
-
+                
                 <motion.button
                   type="button"
                   onClick={() => setShowAddRecord(false)}

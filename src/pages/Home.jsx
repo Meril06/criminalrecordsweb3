@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 
-// MatrixBackground: Cyan color, English chars
+// MatrixBackground: leaves as in your code, only optimizing for semantics
 function MatrixBackground() {
   useEffect(() => {
-    const canvas = document.getElementById('matrix-bg');
+    const canvas = document.getElementById("matrix-bg");
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const fontSize = 18;
     let drops = [];
     let animationId;
@@ -21,7 +21,6 @@ function MatrixBackground() {
     }
 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
-
 
     function draw() {
       const width = canvas.width;
@@ -74,7 +73,6 @@ function MatrixBackground() {
     />
   );
 }
-
 
 function Landing() {
   const particles = useMemo(
@@ -135,22 +133,29 @@ function Landing() {
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
+        aria-label="Main Navigation"
       >
-        <div className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-white tracking-wide">
-            CR-DApp
-          </span>
-        </div>
+        <div className="flex items-center space-x-3">
+  <img
+    src="/generated-image.png"     // Use your actual file name; leave "/" for public folder
+    alt="CR-DApp logo"
+    className="w-10 h-10 rounded-full border-2 border-cyan-400"
+  />
+  <span className="text-2xl font-bold text-white tracking-wide">
+    CR-DApp
+  </span>
+</div>
+
         <div className="flex space-x-6">
           <a
             href="/"
-            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded"
           >
             Home
           </a>
           <a
             href="#about"
-            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded"
           >
             About
           </a>
@@ -158,7 +163,7 @@ function Landing() {
             href="https://github.com/your-repo"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium focus:outline-none focus:ring-2 focus:ring-cyan-400 rounded"
           >
             GitHub
           </a>
@@ -190,20 +195,45 @@ function Landing() {
             A secure, transparent system for storing and accessing criminal records using Web3.
           </motion.p>
           <motion.div
-            className="space-x-6"
+            className="space-x-6 flex flex-wrap justify-center"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1, duration: 0.6 }}
           >
+            {/* Police Dashboard Button - vibrant cyan glow */}
             <a
               href="/police"
-              className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-lg shadow-lg hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 font-semibold inline-flex items-center space-x-2"
+              className="
+                px-8 py-4
+                bg-gradient-to-r from-cyan-600 to-cyan-500
+                text-white rounded-lg shadow-lg font-semibold
+                inline-flex items-center space-x-2
+                transition duration-300 ease-in-out
+                hover:scale-105
+                hover:from-cyan-400 hover:to-cyan-550
+                hover:text-white
+                hover:shadow-[0_0_10px_#22d3ee,0_0_20px_#22d3eeb3]
+                focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-black
+              "
+              aria-label="Open Police Dashboard"
             >
               <span>Police Dashboard</span>
             </a>
+            {/* Public Portal Button - subtle grey, not cyan */}
             <a
               href="/public"
-              className="px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-lg shadow-lg hover:shadow-gray-500/30 hover:scale-105 transition-all duration-300 font-semibold inline-flex items-center space-x-2 border border-gray-600"
+              className="
+                px-8 py-4
+                bg-gradient-to-r from-gray-700 to-gray-800
+                text-gray-300 rounded-lg shadow-md font-semibold
+                inline-flex items-center space-x-2 border border-gray-600
+                transition duration-300 ease-in-out
+                hover:scale-105
+                hover:bg-gray-600 hover:border-gray-400
+                hover:text-white
+                focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-black
+              "
+              aria-label="Open Public Portal"
             >
               <span>Public Portal</span>
             </a>
@@ -211,7 +241,7 @@ function Landing() {
         </motion.div>
       </div>
 
-      {/* About Section - scrolls below */}
+      {/* About Section */}
       <div
         id="about"
         className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 py-16"
