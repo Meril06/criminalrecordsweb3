@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 
+// MatrixBackground: Cyan color, English chars
 function MatrixBackground() {
   useEffect(() => {
     const canvas = document.getElementById('matrix-bg');
@@ -19,19 +20,19 @@ function MatrixBackground() {
       drops = Array(columns).fill(1);
     }
 
-    const chars =
-      'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+
 
     function draw() {
       const width = canvas.width;
       const height = canvas.height;
 
-      ctx.fillStyle = 'rgba(10,20,30,0.18)';
+      ctx.fillStyle = 'rgba(10,20,30,0.2)';
       ctx.fillRect(0, 0, width, height);
       ctx.font = `${fontSize}px monospace`;
-      ctx.shadowColor = '#00ff99';
-      ctx.shadowBlur = 8;
-      ctx.fillStyle = '#00fff7';
+      ctx.fillStyle = '#06b6d4';       
+      ctx.shadowColor = '#06b6d4';     
+      ctx.shadowBlur = 8;             
 
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
@@ -40,13 +41,11 @@ function MatrixBackground() {
         if (drops[i] * fontSize > height && Math.random() > 0.975) {
           drops[i] = 0;
         }
-        drops[i]++;
+        drops[i] += 0.13;
       }
 
-      ctx.shadowBlur = 0;
-      setTimeout(() => {
-        animationId = requestAnimationFrame(draw);
-      }, 50); // slow speed
+      ctx.shadowBlur = 0; // Reset shadow
+      animationId = requestAnimationFrame(draw);
     }
 
     setupCanvas();
@@ -70,12 +69,12 @@ function MatrixBackground() {
         height: '100vh',
         zIndex: 0,
         pointerEvents: 'none',
-        opacity: 0.5,
-        filter: 'blur(0.3px)',
+        opacity: 0.4,
       }}
     />
   );
 }
+
 
 function Landing() {
   const particles = useMemo(
@@ -95,10 +94,10 @@ function Landing() {
   );
 
   return (
-    <div className="fixed inset-0 min-h-screen w-screen overflow-hidden flex flex-col bg-black">
+    <div className="min-h-screen w-screen bg-black overflow-y-auto scroll-smooth">
       <MatrixBackground />
 
-      {/* Floating Glowing Particles */}
+      {/* Floating Glowing Particles (CYAN) */}
       <motion.div
         className="absolute inset-0 pointer-events-none z-0"
         initial={{ opacity: 0 }}
@@ -108,7 +107,7 @@ function Landing() {
         {particles.map((p, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-blue-400 blur-2xl"
+            className="absolute rounded-full bg-cyan-400 blur-2xl"
             style={{
               width: `${p.width}px`,
               height: `${p.height}px`,
@@ -145,13 +144,13 @@ function Landing() {
         <div className="flex space-x-6">
           <a
             href="/"
-            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
           >
             Home
           </a>
           <a
             href="#about"
-            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
           >
             About
           </a>
@@ -159,72 +158,92 @@ function Landing() {
             href="https://github.com/your-repo"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-200 hover:text-white transition-colors duration-200 font-medium"
+            className="text-cyan-200 hover:text-white transition-colors duration-200 font-medium"
           >
             GitHub
           </a>
         </div>
       </motion.nav>
 
-      {/* Hero Section */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-4">
-        <motion.h1
-          className="text-4xl md:text-6xl font-extrabold mb-4 text-white drop-shadow-lg"
-          initial={{ opacity: 0, y: -40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          Criminal Records DApp
-        </motion.h1>
-        <motion.p
-          className="mb-8 text-lg md:text-2xl text-blue-200 max-w-2xl"
+      {/* Hero Section with GLASS CARD */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4">
+        <motion.div
+          className="backdrop-blur-lg rounded-2xl shadow-2xl p-8 max-w-3xl mx-auto border-2 border-cyan-500/25 hover:border-cyan-500/50 bg-black/10 transition-all duration-300"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
+          transition={{ duration: 1 }}
         >
-          A secure, transparent system for storing and accessing criminal records
-          using Web3.
-        </motion.p>
-        <motion.div
-          className="space-x-4"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1, duration: 0.6 }}
-        >
-          <a
-            href="/police"
-            className="px-6 py-3 bg-blue-600 text-white rounded shadow-lg hover:bg-blue-700 transition-all duration-300 font-semibold"
+          <motion.h1
+            className="text-4xl md:text-6xl font-extrabold mb-6 text-white drop-shadow-lg"
+            initial={{ opacity: 0, y: -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
           >
-            Police Dashboard
-          </a>
-          <a
-            href="/public"
-            className="px-6 py-3 bg-gray-700 text-white rounded shadow-lg hover:bg-gray-800 transition-all duration-300 font-semibold"
+            Criminal Records DApp
+          </motion.h1>
+          <motion.p
+            className="mb-10 text-lg md:text-2xl text-cyan-200 max-w-2xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
           >
-            Public Portal
-          </a>
+            A secure, transparent system for storing and accessing criminal records using Web3.
+          </motion.p>
+          <motion.div
+            className="space-x-6"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1, duration: 0.6 }}
+          >
+            <a
+              href="/police"
+              className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-lg shadow-lg hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 font-semibold inline-flex items-center space-x-2"
+            >
+              <span>Police Dashboard</span>
+            </a>
+            <a
+              href="/public"
+              className="px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-lg shadow-lg hover:shadow-gray-500/30 hover:scale-105 transition-all duration-300 font-semibold inline-flex items-center space-x-2 border border-gray-600"
+            >
+              <span>Public Portal</span>
+            </a>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <footer className="relative z-10 text-center text-blue-200 py-3 text-sm opacity-80">
-        &copy; {new Date().getFullYear()} Criminal Records DApp | Built for
-        Hackathons 🚀
-      </footer>
-
-      {/* About Section */}
+      {/* About Section - scrolls below */}
       <div
         id="about"
-        className="relative z-10 text-center text-blue-100 py-8 px-4 max-w-2xl mx-auto"
+        className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 py-16"
       >
-        <h2 className="text-2xl font-bold mb-2">About</h2>
-        <p>
-          This project leverages blockchain and decentralized storage to ensure
-          criminal records are tamper-proof, transparent, and accessible only to
-          authorized parties. Built with React, Tailwind CSS, and Framer Motion
-          for a modern and dynamic user experience.
-        </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="max-w-2xl mx-auto"
+        >
+          <h2 className="text-4xl font-bold mb-6 text-white">About</h2>
+          <p className="text-lg text-cyan-200 leading-relaxed">
+            This project leverages blockchain and decentralized storage to ensure
+            criminal records are tamper-proof, transparent, and accessible only to
+            authorized parties. Built with React, Tailwind CSS, and Framer Motion
+            for a modern and dynamic user experience.
+          </p>
+        </motion.div>
       </div>
+
+      {/* Footer (scrollable) */}
+      <footer className="relative z-10 text-center text-cyan-200 py-8 text-sm opacity-80 border-t border-blue-900">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          &copy; {new Date().getFullYear()} Criminal Records DApp
+        </motion.div>
+      </footer>
     </div>
   );
 }
